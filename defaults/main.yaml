@@ -1,0 +1,19 @@
+---
+cert_manager_namespace: cert-manager
+cert_manager_chart_version: ""
+cert_manager_install_crds: true
+cert_manager_wait: true
+
+cert_manager_manage_cf_secret: true
+cert_manager_cf_secret_name: cloudflare-api-token
+cert_manager_cf_secret_namespace: "{{ cert_manager_namespace }}"
+cert_manager_cf_token_var: cloudflare_api_token
+
+cert_manager_manage_issuer_prod: true
+cert_manager_manage_issuer_staging: false
+
+cert_manager_issuer_email: you@example.com
+cert_manager_issuer_name_prod: letsencrypt-dns01
+cert_manager_issuer_name_staging: letsencrypt-dns01-staging
+
+cert_manager_extra_values: {}
