@@ -32,17 +32,54 @@
   become: true
   run_once: true
 
-- name: Wait for cert-manager deployments to be ready (belt & suspenders)
-  kubernetes.core.k8s_info:
+- name: Wait for cert-manager deployment to be Available
+  kubernetes.core.k8s:
     api_version: apps/v1
     kind: Deployment
+    name: cert-manager
     namespace: "{{ cert_manager_namespace }}"
-  register: cm_deploys
-  until: >
-    (cm_deploys.resources | selectattr('metadata.name','equalto','cert-manager') | list | length) > 0 and
-    (cm_deploys.resources | selectattr('metadata.name','equalto','cert-manager') | map(attribute='status.availableReplicas') | list | first | default(0)) >= 1
-  retries: 30
-  delay: 5
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
+    wait: true
+    wait_condition:
+      type: Available
+      status: "True"
+    wait_timeout: 600
+  delegate_to: "{{ head_host }}"
+  become: true
+  run_once: true
+
+# (Optional) Ensure webhook & cainjector too
+- name: Wait for cert-manager-webhook deployment to be Available
+  kubernetes.core.k8s:
+    api_version: apps/v1
+    kind: Deployment
+    name: cert-manager-webhook
+    namespace: "{{ cert_manager_namespace }}"
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
+    wait: true
+    wait_condition:
+      type: Available
+      status: "True"
+    wait_timeout: 600
+  delegate_to: "{{ head_host }}"
+  become: true
+  run_once: true
+
+- name: Wait for cert-manager-cainjector deployment to be Available
+  kubernetes.core.k8s:
+    api_version: apps/v1
+    kind: Deployment
+    name: cert-manager-cainjector
+    namespace: "{{ cert_manager_namespace }}"
+    kubeconfig: /etc/rancher/rke2/rke2.yaml
+    wait: true
+    wait_condition:
+      type: Available
+      status: "True"
+    wait_timeout: 600
+  delegate_to: "{{ head_host }}"
+  become: true
+  run_once: true
 
 - name: Create Cloudflare API token Secret
   when: cert_manager_manage_cf_secret
