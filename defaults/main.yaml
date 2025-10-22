@@ -12,7 +12,7 @@ cert_manager_cf_token_var: cloudflare_api_token
 cert_manager_manage_issuer_prod: true
 cert_manager_manage_issuer_staging: false
 
-cert_manager_issuer_email: you@example.com
+cert_manager_issuer_email: luis.laimer@gmail.com
 cert_manager_issuer_name_prod: letsencrypt-dns01
 cert_manager_issuer_name_staging: letsencrypt-dns01-staging
 
